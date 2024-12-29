@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="org.rvitm.todo_app">
+    <requires lib="gtk" version="3.0" />
+
+    <!-- Main Window -->
+    <object class="GtkWindow" id="main_window">
+        <property name="title">To-Do App</property>
+        <property name="default-width">800</property>
+        <property name="default-height">600</property>
+        <property name="resizable">false</property>
+
+        <!-- GtkBox for the entire layout -->
+        <child>
+            <object class="GtkBox" id="main_box">
+                <property name="orientation">vertical</property>
+                <property name="margin">10</property>
+                <property name="spacing">10</property>
+
+                <!-- Top hero bar -->
+                <child>
+                    <object class="GtkBox" id="top_bar">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">540</property>
+                        <property name="halign">fill</property>
+                        <property name="valign">center</property>
+                        <property name="hexpand">true</property>
+                        <property name="vexpand">false</property>
+
+                        <child>
+                            <object class="GtkLabel" id="label_hero_a">
+                                <property name="label">0 / 0 Tasks Completed</property>
+                                <property name="xalign">1</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkLabel" id="label_hero_b">
+                                <property name="label">--:--:-- --</property>
+                                <property name="xalign">1</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+
+                <!-- Middle task area (task list) -->
+                <child>
+                    <object class="GtkScrolledWindow" id="task_area">
+                        <property name="vexpand">true</property>
+                        <property name="hexpand">true</property>
+                        <child>
+                            <object class="GtkListBox" id="task_list">
+                                <property name="selection-mode">single</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+
+                <!-- Task Name and Description Entry Section -->
+                <child>
+                    <object class="GtkBox" id="task_input_box">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">10</property>
+                        <property name="halign">fill</property>
+
+                        <!-- Task Name Entry -->
+                        <child>
+                            <object class="GtkEntry" id="task_name_entry">
+                                <property name="placeholder-text">Enter Task Name</property>
+                            </object>
+                        </child>
+
+                        <!-- Task Description Entry -->
+                        <child>
+                            <object class="GtkEntry" id="task_description_entry">
+                                <property name="placeholder-text">Enter Task Description</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+
+                <!-- Buttons for CRUD Operations -->
+                <child>
+                    <object class="GtkBox" id="crud_buttons_box">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">10</property>
+                        <property name="halign">fill</property>
+
+                        <child>
+                            <object class="GtkButton" id="create_task_button">
+                                <property name="label">Create Task</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkButton" id="update_task_button">
+                                <property name="label">Update Task</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkButton" id="delete_task_button">
+                                <property name="label">Delete Task</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+
+            </object>
+        </child>
+    </object>
+</interface>

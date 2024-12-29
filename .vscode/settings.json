@@ -1,3 +1,8 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "files.associations": {
+        "gtk.h": "c",
+        "stdbool.h": "c",
+        "typeinfo": "c"
+    }
 }
