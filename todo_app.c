@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <string.h>
+#include "user_auth.c"
 
 #define MAX_TASKS 100
 
@@ -24,6 +25,9 @@ static void on_complete_task_button_clicked(GtkButton *button, gpointer user_dat
 
 int main(int argc, char *argv[])
 {
+    auth();
+    printf("Auth successful\n");
+
     GtkBuilder *builder;
     GtkWidget *window;
     GtkWidget *add_task_button, *edit_task_button, *delete_task_button, *complete_task_button;
@@ -70,6 +74,7 @@ int main(int argc, char *argv[])
 
     /** SHOW WINDOW AND RUN APP */
     gtk_widget_show_all(window);
+    gtk_window_present(GTK_WINDOW(window));
     gtk_main();
 
     return 0;
