@@ -15,18 +15,19 @@ Task tasks[MAX_TASKS];
 int task_count = 0;
 
 static void update_clock(GtkLabel *clock_label);
-static void populate_task_list(GtkListBox *list_box);
-static void add_task(const char *task_name, const char *task_description, GtkListBox *task_list);
+static void populate_task_list(GtkListBox *list_box, GtkLabel *task_count_label);
+static void add_task(const char *task_name, const char *task_description, GtkListBox *task_list, GtkLabel *task_count_label);
 static void on_add_task_button_clicked(GtkButton *button, gpointer user_data);
 static void on_edit_task_button_clicked(GtkButton *button, gpointer user_data);
 static void on_delete_task_button_clicked(GtkButton *button, gpointer user_data);
+static void on_complete_task_button_clicked(GtkButton *button, gpointer user_data);
 
 int main(int argc, char *argv[])
 {
     GtkBuilder *builder;
     GtkWidget *window;
-    GtkWidget *add_task_button, *edit_task_button, *delete_task_button;
-    GtkLabel *clock_label;
+    GtkWidget *add_task_button, *edit_task_button, *delete_task_button, *complete_task_button;
+    GtkLabel *clock_label, *task_count_label;
     GtkListBox *task_list;
     GtkEntry *task_name_entry, *task_description_entry;
 
@@ -49,7 +50,10 @@ int main(int argc, char *argv[])
     clock_label = GTK_LABEL(gtk_builder_get_object(builder, "label_hero_b"));
     g_timeout_add_seconds(1, (GSourceFunc)update_clock, clock_label); // Update every second
 
-    gpointer user_data[] = {task_name_entry, task_description_entry, task_list};
+    /** TASK COUNT */
+    task_count_label = GTK_LABEL(gtk_builder_get_object(builder, "label_hero_a"));
+
+    gpointer user_data[] = {task_name_entry, task_description_entry, task_list, task_count_label};
 
     /** BUTTONS */
     add_task_button = GTK_WIDGET(gtk_builder_get_object(builder, "create_task_button"));
@@ -59,7 +63,10 @@ int main(int argc, char *argv[])
     g_signal_connect(edit_task_button, "clicked", G_CALLBACK(on_edit_task_button_clicked), user_data);
 
     delete_task_button = GTK_WIDGET(gtk_builder_get_object(builder, "delete_task_button"));
-    g_signal_connect(delete_task_button, "clicked", G_CALLBACK(on_delete_task_button_clicked), task_list);
+    g_signal_connect(delete_task_button, "clicked", G_CALLBACK(on_delete_task_button_clicked), user_data);
+
+    complete_task_button = GTK_WIDGET(gtk_builder_get_object(builder, "complete_task_button"));
+    g_signal_connect(complete_task_button, "clicked", G_CALLBACK(on_complete_task_button_clicked), user_data);
 
     /** SHOW WINDOW AND RUN APP */
     gtk_widget_show_all(window);
@@ -78,7 +85,20 @@ static void update_clock(GtkLabel *clock_label)
     gtk_label_set_text(clock_label, time_str);
 }
 
-static void populate_task_list(GtkListBox *list_box) {
+static void update_task_count_label(GtkLabel *task_count_label)
+{
+    int completed_tasks = 0;
+    for (int i = 0; i < task_count; i++) {
+        if (tasks[i].completed) {
+            completed_tasks++;
+        }
+    }
+    char label_text[50];
+    sprintf(label_text, "%d / %d Tasks Completed", completed_tasks, task_count);
+    gtk_label_set_text(task_count_label, label_text);
+}
+
+static void populate_task_list(GtkListBox *list_box, GtkLabel *task_count_label) {
     GList *children, *iter;
     children = gtk_container_get_children(GTK_CONTAINER(list_box));
     for (iter = children; iter != NULL; iter = g_list_next(iter)) {
@@ -102,9 +122,10 @@ static void populate_task_list(GtkListBox *list_box) {
     }
 
     gtk_widget_show_all(GTK_WIDGET(list_box));
+    update_task_count_label(task_count_label);
 }
 
-static void add_task(const char *task_name, const char *task_description, GtkListBox *task_list)
+static void add_task(const char *task_name, const char *task_description, GtkListBox *task_list, GtkLabel *task_count_label)
 {
     if (task_count >= MAX_TASKS) {
         g_print("Task list is full!\n");
@@ -131,6 +152,7 @@ static void add_task(const char *task_name, const char *task_description, GtkLis
     gtk_list_box_insert(task_list, row, -1);
 
     gtk_widget_show_all(GTK_WIDGET(task_list));
+    update_task_count_label(task_count_label);
 }
 
 static void on_add_task_button_clicked(GtkButton *button, gpointer user_data)
@@ -139,11 +161,12 @@ static void on_add_task_button_clicked(GtkButton *button, gpointer user_data)
     GtkEntry *task_name_entry = GTK_ENTRY(((gpointer*)user_data)[0]);
     GtkEntry *task_description_entry = GTK_ENTRY(((gpointer*)user_data)[1]);
     GtkListBox *task_list = GTK_LIST_BOX(((gpointer*)user_data)[2]);
+    GtkLabel *task_count_label = GTK_LABEL(((gpointer*)user_data)[3]);
 
     const char *task_name = gtk_entry_get_text(task_name_entry);
     const char *task_description = gtk_entry_get_text(task_description_entry);
 
-    add_task(task_name, task_description, task_list);
+    add_task(task_name, task_description, task_list, task_count_label);
 
     gtk_entry_set_text(task_name_entry, "");
     gtk_entry_set_text(task_description_entry, "");
@@ -156,6 +179,7 @@ static void on_edit_task_button_clicked(GtkButton *button, gpointer user_data)
     GtkEntry *task_name_entry = GTK_ENTRY(((gpointer*)user_data)[0]);
     GtkEntry *task_description_entry = GTK_ENTRY(((gpointer*)user_data)[1]);
     GtkListBox *task_list = GTK_LIST_BOX(((gpointer*)user_data)[2]);
+    GtkLabel *task_count_label = GTK_LABEL(((gpointer*)user_data)[3]);
 
     GtkListBoxRow *selected_row = gtk_list_box_get_selected_row(task_list);
     if (!selected_row) {
@@ -188,13 +212,15 @@ static void on_edit_task_button_clicked(GtkButton *button, gpointer user_data)
 
     gtk_entry_set_text(task_name_entry, "");
     gtk_entry_set_text(task_description_entry, "");
+    update_task_count_label(task_count_label);
 }
 
 static void on_delete_task_button_clicked(GtkButton *button, gpointer user_data)
 {
     g_print("Delete Task Button Clicked\n");
     
-    GtkListBox *task_list = GTK_LIST_BOX((gpointer*)user_data);
+    GtkListBox *task_list = GTK_LIST_BOX(((gpointer*)user_data)[2]);
+    GtkLabel *task_count_label = GTK_LABEL(((gpointer*)user_data)[3]);
     GtkListBoxRow *selected_row = gtk_list_box_get_selected_row(task_list);
     if (selected_row == NULL) {
         g_print("No task selected!\n");
@@ -211,5 +237,27 @@ static void on_delete_task_button_clicked(GtkButton *button, gpointer user_data)
 
     gtk_widget_destroy(GTK_WIDGET(selected_row));
 
-    populate_task_list(task_list);
+    populate_task_list(task_list, task_count_label);
 }
+
+static void on_complete_task_button_clicked(GtkButton *button, gpointer user_data)
+{
+    g_print("Complete Task Button Clicked\n");
+    
+    GtkListBox *task_list = GTK_LIST_BOX(((gpointer*)user_data)[2]);
+    GtkLabel *task_count_label = GTK_LABEL(((gpointer*)user_data)[3]);
+    GtkListBoxRow *selected_row = gtk_list_box_get_selected_row(task_list);
+    if (selected_row == NULL) {
+        g_print("No task selected!\n");
+        return;
+    }
+
+    int index = gtk_list_box_row_get_index(selected_row);
+
+    tasks[index].completed = !tasks[index].completed;
+
+    gtk_widget_destroy(GTK_WIDGET(selected_row));
+
+    populate_task_list(task_list, task_count_label);
+}
+

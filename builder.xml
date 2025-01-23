@@ -41,6 +41,13 @@
                     </object>
                 </child>
 
+                <!-- Filter Entry -->
+                <child>
+                    <object class="GtkEntry" id="filter_entry">
+                        <property name="placeholder-text">Filter Tasks</property>
+                    </object>
+                </child>
+
                 <!-- Middle task area (task list) -->
                 <child>
                     <object class="GtkScrolledWindow" id="task_area">
@@ -97,6 +104,11 @@
                         <child>
                             <object class="GtkButton" id="delete_task_button">
                                 <property name="label">Delete Task</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkButton" id="complete_task_button">
+                                <property name="label">Complete Task</property>
                             </object>
                         </child>
                     </object>
