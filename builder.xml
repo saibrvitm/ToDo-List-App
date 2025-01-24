@@ -41,13 +41,6 @@
                     </object>
                 </child>
 
-                <!-- Filter Entry -->
-                <child>
-                    <object class="GtkEntry" id="filter_entry">
-                        <property name="placeholder-text">Filter Tasks</property>
-                    </object>
-                </child>
-
                 <!-- Middle task area (task list) -->
                 <child>
                     <object class="GtkScrolledWindow" id="task_area">
