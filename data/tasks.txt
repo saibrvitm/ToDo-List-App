@@ -1,9 +1,7 @@
-abc|Monday|1|sdgfsag|dskgjksjfg
-abc|Tuesday|0|try do|dslkgjskdg
-bhuwan|Monday|0|dsfdsf|dsfsdg
-abc|Wednesday|0|dsgjhfskgh|dsfsadgafsg
-abc|Tuesday|0|dsfaf|sfahgfdhsdgh
-bhuwan|Sunday|0|do|nothing
-abc|Thursday|1|sdfdf|fsdfdsf
-abc|Wednesday|0|shghgsh|sdfsdfdf
-abc|Sunday|0|a|a
+abc|Monday|1|Buy Groceries|Purchase vegetables, fruits, milk, and bread from the store.
+abc|Tuesday|0|Morning Jog|Go for a 30-minute jog in the park to stay active.
+abc|Wednesday|0|Complete Assignment|Finish the pending math assignment before the deadline.
+abc|Wednesday|0|Call Parents|Catch up with parents and update them about the week.
+abc|Saturday|0|Clean Room|Organize the desk, vacuum the floor, and arrange the bookshelf.
+abc|Thursday|0|Watch a Movie|Relax and enjoy a new or favorite movie.
+abc|Sunday|0|Watch a Movie|Relax and enjoy a new or favorite movie.

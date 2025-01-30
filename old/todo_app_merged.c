@@ -2,10 +2,17 @@
 #include <time.h>
 #include <stdbool.h>
 #include <string.h>
-#include "user_auth.c"
 
 #define MAX_TASKS 100
-#define TASK_FILE "data/tasks.txt"
+#define TASK_FILE "./tasks.txt"
+#define ENTER 13
+#define BCKSPC 8
+#define DATA_FILE "./users.dat"
+
+typedef struct {
+    char username[50];
+    char password[50];
+} User;
 
 typedef struct {
     char username[50];
@@ -18,6 +25,7 @@ typedef struct {
 Task tasks[MAX_TASKS];
 int task_count = 0;
 char* g_username;
+char GLOBAL_USERNAME[50];
 
 static void update_clock(GtkLabel *clock_label);
 static void populate_task_list(GtkListBox *list_box, GtkLabel *task_count_label, const char* filter_day);
@@ -31,6 +39,11 @@ static void on_edit_task_button_clicked(GtkButton *button, gpointer user_data);
 static void on_delete_task_button_clicked(GtkButton *button, gpointer user_data);
 static void on_complete_task_button_clicked(GtkButton *button, gpointer user_data);
 static void on_combobox_button_clicked(GtkComboBoxText *combo_box, gpointer user_data);
+static void takeInput(const char *prompt, char *input);
+static void takePassword(const char *prompt, char *password);
+static void signUp();
+static int login();
+static char* auth();
 
 int main(int argc, char *argv[]) {
     g_username = auth();
@@ -342,4 +355,138 @@ static void on_combobox_button_clicked(GtkComboBoxText *combo_box, gpointer user
         populate_task_list(GTK_LIST_BOX(((gpointer*)user_data)[0]), GTK_LABEL(((gpointer*)user_data)[1]), selected_option);
         g_free((gchar *)selected_option); // Free the returned string
     }
+}
+
+static void takeInput(const char *prompt, char *input) {
+    printf("%s", prompt);
+    fgets(input, 50, stdin);
+    input[strcspn(input, "\n")] = '\0';
+}
+
+static void takePassword(const char *prompt, char *password) {
+    printf("%s", prompt);
+    int i = 0;
+    char ch;
+
+    while (1) {
+        ch = getch();
+        if (ch == ENTER) {
+            password[i] = '\0';
+            break;
+        } else if (ch == BCKSPC) {
+            if (i > 0) {
+                i--;
+                printf("\b \b");
+            }
+        } else if (i < 49) {
+            password[i++] = ch;
+            printf("*");
+        }
+    }
+    printf("\n");
+}
+
+static void signUp() {
+    FILE *fp;
+    User newUser;
+    char confirmPassword[50];
+
+    printf("\n--- Sign Up ---\n");
+
+    takeInput("Enter your username: ", newUser.username);
+    takePassword("Enter your password: ", newUser.password);
+    takePassword("Confirm your password: ", confirmPassword);
+
+    if (strcmp(newUser.password, confirmPassword) != 0) {
+        printf("\nPasswords do not match. Registration failed.\n");
+        return;
+    }
+
+    fp = fopen(DATA_FILE, "ab+");
+    if (fp == NULL) {
+        printf("\nError: Could not open file %s\n", DATA_FILE);
+        return;
+    }
+
+    fwrite(&newUser, sizeof(User), 1, fp);
+    fclose(fp);
+
+    printf("\nUser registration successful! Your username is '%s'.\n", newUser.username);
+}
+
+static int login() {
+    FILE *fp;
+    User existingUser;
+    char username[50], password[50];
+    int userFound = 0;
+
+    printf("\n--- Login ---\n");
+
+    takeInput("Enter your username: ", username);
+    takePassword("Enter your password: ", password);
+
+    fp = fopen(DATA_FILE, "rb");
+    if (fp == NULL) {
+        printf("\nError: Could not open file %s. No users registered yet.\n", DATA_FILE);
+        return 0;
+    }
+
+    while (fread(&existingUser, sizeof(User), 1, fp)) {
+        if (strcmp(existingUser.username, username) == 0) {
+            userFound = 1;
+            if (strcmp(existingUser.password, password) == 0) {
+                fclose(fp);
+                printf("\nLogin successful! Welcome, %s.\n", existingUser.username);
+                strcpy(GLOBAL_USERNAME, existingUser.username);
+                return 1;
+            } else {
+                printf("\nIncorrect password.\n");
+                fclose(fp);
+                return 0;
+            }
+        }
+    }
+
+    if (!userFound) {
+        printf("\nUsername not found.\n");
+    }
+
+    fclose(fp);
+    return 0;
+}
+
+static char* auth() {
+    int choice;
+
+    while (1) {
+        printf("\n--- Authentication System ---\n");
+        printf("1. Sign Up\n");
+        printf("2. Login\n");
+        printf("3. Exit\n");
+        printf("Your choice: ");
+
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            printf("\nInvalid input. Please enter a number.\n");
+            continue;
+        }
+        getchar();
+
+        switch (choice) {
+            case 1:
+                signUp();
+                break;
+            case 2:
+                if (login()) {
+                    return GLOBAL_USERNAME;
+                }
+                break;
+            case 3:
+                printf("\nExiting... Goodbye!\n");
+                exit(0);
+            default:
+                printf("\nInvalid choice. Try again.\n");
+        }
+    }
+    return "null";
 }

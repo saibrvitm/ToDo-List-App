@@ -1,28 +1,47 @@
 # To-Do Application
 
 ## Overview
-This is a simple GTK-based To-Do list application. The app allows users to manage tasks efficiently through a graphical interface. The operations include adding, editing, and deleting tasks. A real-time clock is displayed in the interface for convenience.
+This is a simple GTK-based To-Do list application. The app allows users to manage tasks efficiently through a graphical interface. The operations include adding, editing, and deleting tasks. A real-time clock is displayed in the interface for convenience. Users can filter tasks by day of the week and save and load tasks from a file. The app also allows users to mark tasks as completed or incomplete.
 
 ## Run the project
-The project can be run as
+The project can be compiled first, using the provided bash script:
 ```bash
-./compile.bash todo_app.c && ./gtk_todo_app.exe
+./script.bash
 ```
-###### NOTE: It will compile with warnings.
+and run using
+```bash
+./ToDo_Application.exe
+```
+
+## Images
+![To-Do App Screenshot](blob/to-do-app-screenshot.png)
+![Authentication System Screenshot](blob/authentication-system-screenshot.png)
 
 ## Features
-1. **Add Tasks**  
+1. **User Authentication**  
+   - Users can sign up and log in to access the app.
+
+2. **Add Tasks**  
    - Users can input a task name and description and add it to the task list.
    - The task list updates dynamically.
 
-2. **Edit Tasks**  
+3. **Edit Tasks**  
    - Users can select an existing task, modify its name or description, and update it in the list.
 
-3. **Delete Tasks**  
+4. **Delete Tasks**  
    - Users can remove a selected task from the list.
 
-4. **Real-Time Clock**  
+5. **Real-Time Clock**  
    - A clock is displayed in the app, updating every second to show the current time.
+
+6. **Filter Tasks by Day**  
+   - Users can filter the task list by day of the week.
+
+7. **Save and Load Tasks**  
+   - Users can save and load tasks from a file.
+
+8. **Task Completion Status**  
+   - Users can mark tasks as completed or incomplete.
 
 ## Usage Instructions
 1. **Adding a Task**  
@@ -41,10 +60,10 @@ The project can be run as
 4. **View Clock**  
    - The clock at the top of the app updates automatically.
 
-## Limitations
-- The app supports a maximum of 100 tasks at a time. 
-- Task names and descriptions cannot be empty.
+5. **Filter Tasks by Day**  
+   - Use the dropdown menu to select a day of the week.
+   - The task list updates to show only tasks for the selected day.
 
 ## Requirements
 - GTK 3.x must be installed on your system.
-- A builder XML file (`builder.xml`) is required to define the UI layout.
+- A builder XML file (`builder.xml`) is required to define the UI layout. (You can download it from the GitHub repository.)
