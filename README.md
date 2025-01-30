@@ -3,7 +3,8 @@
 ## Overview
 This is a simple GTK-based To-Do list application. The app allows users to manage tasks efficiently through a graphical interface. The operations include adding, editing, and deleting tasks. A real-time clock is displayed in the interface for convenience. Users can filter tasks by day of the week and save and load tasks from a file. The app also allows users to mark tasks as completed or incomplete.
 
-## Run the project
+## Use the project
+Entry point of the project is `todo_app.c`.
 The project can be compiled first, using the provided bash script:
 ```bash
 ./script.bash
