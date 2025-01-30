@@ -48,7 +48,7 @@
                         <property name="hexpand">true</property>
                         <child>
                             <object class="GtkListBox" id="task_list">
-                                <property name="selection-mode">single</property>
+                                <property name="selection-mode">multiple</property>
                             </object>
                         </child>
                     </object>
@@ -61,10 +61,32 @@
                         <property name="spacing">10</property>
                         <property name="halign">fill</property>
 
-                        <!-- Task Name Entry -->
+                        <!-- Task Name Entry and Day ComboBox -->
                         <child>
-                            <object class="GtkEntry" id="task_name_entry">
-                                <property name="placeholder-text">Enter Task Name</property>
+                            <object class="GtkBox" id="another_box">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">10</property>
+                                <property name="hexpand">true</property>
+                                <child>
+                                    <object class="GtkEntry" id="task_name_entry">
+                                        <property name="placeholder-text">Enter Task Name</property>
+                                        <property name="hexpand">true</property>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkComboBoxText" id="task_day_combo_box">
+                                        <items>
+                                            <item id="default">Default</item>
+                                            <item id="monday">Monday</item>
+                                            <item id="tuesday">Tuesday</item>
+                                            <item id="wednesday">Wednesday</item>
+                                            <item id="thursday">Thursday</item>
+                                            <item id="friday">Friday</item>
+                                            <item id="saturday">Saturday</item>
+                                            <item id="sunday">Sunday</item>
+                                        </items>
+                                    </object>
+                                </child>
                             </object>
                         </child>
 
@@ -106,7 +128,6 @@
                         </child>
                     </object>
                 </child>
-
             </object>
         </child>
     </object>

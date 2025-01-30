@@ -3,6 +3,8 @@
     "files.associations": {
         "gtk.h": "c",
         "stdbool.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "task_manager.h": "c",
+        "stdio.h": "c"
     }
 }

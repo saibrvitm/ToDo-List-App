@@ -2,27 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-
-#define ENTER 13
-#define BCKSPC 8
-#define DATA_FILE "data/users.dat"
-
-struct user {
-    char username[50];
-    char password[50];
-};
-
-void takeInput(const char *prompt, char *input);
-void takePassword(const char *prompt, char *password);
-void signUp();
-int login();
-void auth();
+#include "task_manager.h"
 
 // Function: Take string input safely
 void takeInput(const char *prompt, char *input) {
     printf("%s", prompt);
     fgets(input, 50, stdin);
-    input[strcspn(input, "\n")] = '\0'; // Remove trailing newline
+    input[strcspn(input, "\n")] = '\0';
 }
 
 // Function: Securely take password input
@@ -32,18 +18,18 @@ void takePassword(const char *prompt, char *password) {
     char ch;
 
     while (1) {
-        ch = getch(); // Read a character without echoing
+        ch = getch();
         if (ch == ENTER) {
             password[i] = '\0';
             break;
         } else if (ch == BCKSPC) {
             if (i > 0) {
-                i--;                     // Move one step back in the password buffer
-                printf("\b \b");         // Erase the last `*` visually
+                i--;
+                printf("\b \b");
             }
-        } else if (i < 49) { // Prevent buffer overflow
+        } else if (i < 49) {
             password[i++] = ch;
-            printf("*");     // Print `*` for every character entered
+            printf("*");
         }
     }
     printf("\n");
@@ -53,7 +39,7 @@ void takePassword(const char *prompt, char *password) {
 // Function: Sign up a new user
 void signUp() {
     FILE *fp;
-    struct user newUser;
+    User newUser;
     char confirmPassword[50];
 
     printf("\n--- Sign Up ---\n");
@@ -67,14 +53,13 @@ void signUp() {
         return;
     }
 
-    // Open file to append user data
     fp = fopen(DATA_FILE, "ab+");
     if (fp == NULL) {
         printf("\nError: Could not open file %s\n", DATA_FILE);
         return;
     }
 
-    fwrite(&newUser, sizeof(struct user), 1, fp);
+    fwrite(&newUser, sizeof(User), 1, fp);
     fclose(fp);
 
     printf("\nUser registration successful! Your username is '%s'.\n", newUser.username);
@@ -83,7 +68,7 @@ void signUp() {
 // Function: Login an existing user
 int login() {
     FILE *fp;
-    struct user existingUser;
+    User existingUser;
     char username[50], password[50];
     int userFound = 0;
 
@@ -92,19 +77,19 @@ int login() {
     takeInput("Enter your username: ", username);
     takePassword("Enter your password: ", password);
 
-    // Open file to read user data
     fp = fopen(DATA_FILE, "rb");
     if (fp == NULL) {
         printf("\nError: Could not open file %s. No users registered yet.\n", DATA_FILE);
         return 0;
     }
 
-    while (fread(&existingUser, sizeof(struct user), 1, fp)) {
+    while (fread(&existingUser, sizeof(User), 1, fp)) {
         if (strcmp(existingUser.username, username) == 0) {
             userFound = 1;
             if (strcmp(existingUser.password, password) == 0) {
                 fclose(fp);
                 printf("\nLogin successful! Welcome, %s.\n", existingUser.username);
+                strcpy(GLOBAL_USERNAME, existingUser.username);
                 return 1;
             } else {
                 printf("\nIncorrect password.\n");
@@ -123,7 +108,7 @@ int login() {
 }
 
 // Function: Authentication System
-void auth() {
+char* auth() {
     int choice;
 
     while (1) {
@@ -134,11 +119,11 @@ void auth() {
         printf("Your choice: ");
 
         if (scanf("%d", &choice) != 1) {
-            while (getchar() != '\n'); // Clear invalid input
+            while (getchar() != '\n');
             printf("\nInvalid input. Please enter a number.\n");
             continue;
         }
-        getchar(); // Consume newline
+        getchar();
 
         switch (choice) {
             case 1:
@@ -146,7 +131,7 @@ void auth() {
                 break;
             case 2:
                 if (login()) {
-                    return; // Exit the auth system after successful login
+                    return GLOBAL_USERNAME;
                 }
                 break;
             case 3:
@@ -156,4 +141,5 @@ void auth() {
                 printf("\nInvalid choice. Try again.\n");
         }
     }
+    return "null";
 }

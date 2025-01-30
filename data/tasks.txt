@@ -1,3 +1,9 @@
-1|Abcd|Efgh
-0|fff|fff
-0|dfdfsfd|dfsdfsd
+abc|Monday|1|sdgfsag|dskgjksjfg
+abc|Tuesday|0|try do|dslkgjskdg
+bhuwan|Monday|0|dsfdsf|dsfsdg
+abc|Wednesday|0|dsgjhfskgh|dsfsadgafsg
+abc|Tuesday|0|dsfaf|sfahgfdhsdgh
+bhuwan|Sunday|0|do|nothing
+abc|Thursday|1|sdfdf|fsdfdsf
+abc|Wednesday|0|shghgsh|sdfsdfdf
+abc|Sunday|0|a|a
