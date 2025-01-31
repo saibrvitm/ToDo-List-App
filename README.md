@@ -47,6 +47,7 @@ and run using
 ## Usage Instructions
 1. **Adding a Task**  
    - Enter a task name and description in the respective fields.
+   - Choose a specific day of the week from the task list.
    - Click the "Add Task" button to save the task to the list.
 
 2. **Editing a Task**  
